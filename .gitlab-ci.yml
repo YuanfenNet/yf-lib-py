@@ -1,17 +1,15 @@
 image: python:3
 
 stages:
-    - build
-    - publish
+    - deploy
 
-build:
-    stage: build
+deploy:
+    stage: deploy
+    variables:
+        TWINE_USERNAME: $TWINE_USERNAME
+        TWINE_PASSWORD: $TWINE_PASSWORD
     script:
         - python setup.py sdist bdist_wheel
-
-publish:
-    stage: publish
-    script:
         - pip install twine
         - twine upload dist/*${CI_COMMIT_TAG}.tar.gz
     only:
