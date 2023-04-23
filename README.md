@@ -13,9 +13,9 @@ Support .json, .yaml, .ini files.
 Support auto reloading while config file changes.
 
 ```python
-config_json = Config("config.json")
-config_yaml = Config("config.yaml")
-config_ini = Config("config.ini")
+config_json = Config(os.path.abspath("config.json"))
+config_yaml = Config(os.path.abspath("config.yaml"))
+config_ini = Config(os.path.abspath("config.ini"))
 
 print(config_ini["app"]["config_a"])
 print(config_yaml["movie"]["name"])
