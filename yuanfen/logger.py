@@ -15,6 +15,7 @@ file_handler = TimedRotatingFileHandler(
     backupCount=365,
     encoding="utf-8",
 )
+file_handler.suffix = "%Y-%m-%d.log"
 file_handler.setFormatter(log_formatter)
 
 logger = logging.getLogger()
