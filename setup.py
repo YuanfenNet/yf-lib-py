@@ -14,7 +14,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="",
-    install_requires=["yaml", "watchdog"],
+    install_requires=["pyyaml", "watchdog"],
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
