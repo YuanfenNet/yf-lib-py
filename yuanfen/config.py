@@ -7,7 +7,7 @@ import yaml
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-from utils import logger
+import logger
 
 
 class Config:
