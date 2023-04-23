@@ -10,7 +10,7 @@ deploy:
         TWINE_PASSWORD: $TWINE_PASSWORD
     script:
         - python setup.py sdist bdist_wheel
-        - pip install twine
+        - pip install twine -i https://pypi.tuna.tsinghua.edu.cn/simple
         - twine upload dist/*${CI_COMMIT_TAG}.tar.gz
     only:
         - tags
