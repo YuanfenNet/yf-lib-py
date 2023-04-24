@@ -27,7 +27,6 @@ class Config:
 
             self.observer = Config.observer
             self.observer.schedule(ConfigChangeHandler(self), os.path.dirname(path), recursive=False)
-            logger.info("ConfigChangeHandler scheduled")
 
     def __getitem__(self, key):
         return self._data[key]
@@ -47,19 +46,14 @@ class Config:
                         self._data[section][key] = value
             else:
                 raise ValueError("Unsupported config file format")
-            logger.info(f"{self._path} loaded")
 
 
 class ConfigChangeHandler(FileSystemEventHandler):
     def __init__(self, config):
         super().__init__()
         self.config = config
-        logger.info("ConfigChangeHandler init")
 
     def on_modified(self, event):
-        logger.info(
-            f"{event.src_path} modified, {os.path.abspath(event.src_path)}, {os.path.abspath(self.config._path)}"
-        )
         if os.path.abspath(event.src_path) == os.path.abspath(self.config._path):
             self.config._load()
             logger.info(f"{event.src_path} reloaded")
