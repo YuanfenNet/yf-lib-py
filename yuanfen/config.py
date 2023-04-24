@@ -5,6 +5,7 @@ import threading
 
 import yaml
 from watchdog.events import FileSystemEventHandler
+from watchdog.observers.polling import PollingObserver
 from watchdog.observers import Observer
 
 from . import logger
@@ -14,18 +15,18 @@ class Config:
     observer = None
     observer_lock = threading.Lock()
 
-    def __init__(self, _path):
-        self._path = _path
+    def __init__(self, path, poll=True):
+        self._path = path
         self._data = {}
         self._load()
 
         with Config.observer_lock:
             if Config.observer is None:
-                Config.observer = Observer()
+                Config.observer = PollingObserver() if poll else Observer()
                 Config.observer.start()
 
             self.observer = Config.observer
-            self.observer.schedule(ConfigChangeHandler(self), os.path.dirname(_path), recursive=False)
+            self.observer.schedule(ConfigChangeHandler(self), os.path.dirname(path), recursive=False)
             logger.info("ConfigChangeHandler scheduled")
 
     def __getitem__(self, key):
