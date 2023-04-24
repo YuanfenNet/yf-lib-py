@@ -26,6 +26,7 @@ class Config:
 
             self.observer = Config.observer
             self.observer.schedule(ConfigChangeHandler(self), os.path.dirname(_path), recursive=False)
+            logger.info("ConfigChangeHandler scheduled")
 
     def __getitem__(self, key):
         return self._data[key]
@@ -52,6 +53,7 @@ class ConfigChangeHandler(FileSystemEventHandler):
     def __init__(self, config):
         super().__init__()
         self.config = config
+        logger.info("ConfigChangeHandler init")
 
     def on_modified(self, event):
         logger.info(
