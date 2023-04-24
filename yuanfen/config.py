@@ -53,6 +53,7 @@ class ConfigChangeHandler(FileSystemEventHandler):
         self.config = config
 
     def on_modified(self, event):
+        logger.info(f"{event.src_path} modified, {os.path.abspath(event.src_path)}, {os.path.abspath(self.config._path)}"  )
         if os.path.abspath(event.src_path) == os.path.abspath(self.config._path):
             self.config._load()
             logger.info(f"{event.src_path} reloaded")
