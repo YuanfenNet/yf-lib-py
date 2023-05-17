@@ -29,7 +29,10 @@ class Config:
             self.observer.schedule(ConfigChangeHandler(self), os.path.dirname(path), recursive=False)
 
     def __getitem__(self, key):
-        return self._data[key]
+        try:
+            return self._data[key]
+        except KeyError:
+            return None
 
     def _load(self):
         with open(self._path, "r") as f:
