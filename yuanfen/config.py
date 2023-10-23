@@ -8,7 +8,9 @@ from watchdog.events import FileSystemEventHandler
 from watchdog.observers.polling import PollingObserver
 from watchdog.observers import Observer
 
-from . import logger
+from .logger import Logger
+
+logger = Logger("yuanfen.config")
 
 
 class Config:
