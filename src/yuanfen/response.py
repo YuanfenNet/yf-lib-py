@@ -5,14 +5,7 @@ from typing import Optional, Any
 class BaseResponse(BaseModel):
     code: int
     message: str
-    data: Optional[Any]
-
-    def dict(self, *args, **kwargs) -> dict[str, Any]:
-        """
-        Override the default dict method to exclude None values in the response
-        """
-        kwargs.pop("exclude_none", None)
-        return super().model_dump(*args, exclude_none=True, **kwargs)
+    data: Optional[Any] = None
 
 
 class SuccessResponse(BaseResponse):
