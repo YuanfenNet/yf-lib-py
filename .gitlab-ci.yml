@@ -8,6 +8,7 @@ deploy:
     script:
         - pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
         - pip install hatch twine
+        - hatch version ${CI_COMMIT_TAG}
         - hatch build
         - TWINE_USERNAME=gitlab-ci-token TWINE_PASSWORD=${CI_JOB_TOKEN} twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi dist/*
         - TWINE_USERNAME=${TWINE_USERNAME} TWINE_PASSWORD=${TWINE_PASSWORD} twine upload dist/*
