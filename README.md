@@ -33,3 +33,25 @@ logger.info("info log")
 logger.warn("warn log")
 logger.error("error log")
 ```
+
+## utils.response
+
+Response models for fastapi.
+
+```python
+import uvicorn
+from fastapi import FastAPI
+from yuanfen import SuccessResponse
+
+app = FastAPI()
+
+
+@app.get("/health-check")
+def health_check():
+    return SuccessResponse()
+
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+```
