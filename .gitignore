@@ -188,5 +188,5 @@ cython_debug/
 #.idea/
 
 logs/
-test/
+tests/
 test.py
