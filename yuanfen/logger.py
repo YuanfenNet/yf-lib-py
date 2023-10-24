@@ -4,10 +4,10 @@ from logging.handlers import TimedRotatingFileHandler
 
 
 class Logger:
-    def __init__(self, logger_name):
+    def __init__(self, name=None, level=logging.INFO):
         os.makedirs("logs", exist_ok=True)
-
-        log_formatter = logging.Formatter("%(asctime)s [%(levelname)-8s] [%(name)-16s] %(message)s")
+        logger_name_fmt = " [%(name)s]" if name else ""
+        log_formatter = logging.Formatter(f"%(asctime)s [%(levelname)-7s]{logger_name_fmt} %(message)s")
 
         self.stream_handler = logging.StreamHandler()
         self.stream_handler.setFormatter(log_formatter)
@@ -21,13 +21,10 @@ class Logger:
         self.file_handler.suffix = "%Y-%m-%d.log"
         self.file_handler.setFormatter(log_formatter)
 
-        self.logger = logging.getLogger(logger_name)
-        self.logger.setLevel(level=logging.INFO)
+        self.logger = logging.getLogger(name)
+        self.logger.setLevel(level)
         self.logger.addHandler(self.stream_handler)
         self.logger.addHandler(self.file_handler)
-
-    def set_level(self, level):
-        self.logger.setLevel(level)
 
     def debug(self, msg):
         self.logger.debug(f"{msg}")

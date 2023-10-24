@@ -26,10 +26,10 @@ print(config_yaml["movie"]["name"])
 Stream and TimedRotatingFile handlers for logging.
 
 ```python
-logger.set_level(level)
+logger = Logger(name="my-logger", level=logging.INFO)
 
 logger.debug("debug log")
-logger.info("debug log")
-logger.warn("debug log")
-logger.error("debug log")
+logger.info("info log")
+logger.warn("warn log")
+logger.error("error log")
 ```
