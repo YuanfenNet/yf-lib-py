@@ -7,7 +7,7 @@ $ hatch build
 $ python3 -m twine upload dist/*
 ```
 
-## utils.config
+## Config
 
 Support .json, .yaml, .ini files.
 Support auto reloading while config file changes.
@@ -21,7 +21,7 @@ print(config_ini["app"]["config_a"])
 print(config_yaml["movie"]["name"])
 ```
 
-## utils.logger
+## Logger
 
 Stream and TimedRotatingFile handlers for logging.
 
@@ -34,7 +34,7 @@ logger.warn("warn log")
 logger.error("error log")
 ```
 
-## utils.response
+## BaseResponse, SuccessResponse, ErrorResponse
 
 Response models for fastapi.
 
@@ -48,7 +48,7 @@ app = FastAPI()
 
 @app.get("/health-check")
 def health_check():
-    return SuccessResponse()
+    return SuccessResponse(data="OK")
 
 
 if __name__ == "__main__":
@@ -56,10 +56,21 @@ if __name__ == "__main__":
 
 ```
 
+## time
+
 ```python
 from yuanfen import time
 
 time.format(dt=datetime.now(), format="%Y-%m-%dT%H:%M:%S")
 time.parse(dt_string="2023-11-25T10:51:19", format="%Y-%m-%dT%H:%M:%S")
 time.format_duration(90)
+```
+
+## GroupRobot
+
+Webhook group robot
+
+```python
+robot = GroupRobot(webhook="your robot's webhook path")
+robot.send(data)
 ```
