@@ -55,3 +55,10 @@ if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 ```
+
+```python
+from yuanfen import time
+
+time.format(dt=datetime.now(), format="%Y-%m-%dT%H:%M:%S")
+time.parse(dt_string="2023-11-25T10:51:19", format="%Y-%m-%dT%H:%M:%S")
+```
