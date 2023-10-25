@@ -1,6 +1,10 @@
 from datetime import datetime
 
 
+def now():
+    return datetime.now()
+
+
 def format(dt: datetime = datetime.now(), format: str = "%Y-%m-%dT%H:%M:%S.%f") -> str:
     return dt.strftime(format)
 
