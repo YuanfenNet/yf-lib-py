@@ -61,4 +61,5 @@ from yuanfen import time
 
 time.format(dt=datetime.now(), format="%Y-%m-%dT%H:%M:%S")
 time.parse(dt_string="2023-11-25T10:51:19", format="%Y-%m-%dT%H:%M:%S")
+time.format_duration(90)
 ```
