@@ -1,6 +1,5 @@
 import requests
 import json
-from .response import SuccessResponse
 
 
 class GroupRobot:
@@ -11,4 +10,4 @@ class GroupRobot:
         response = requests.post(
             self.webhook, headers={"Content-Type": "application/json"}, data=json.dumps(data), timeout=10
         )
-        return SuccessResponse(data=response.json())
+        return response.json()
