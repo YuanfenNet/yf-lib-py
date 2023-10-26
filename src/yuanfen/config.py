@@ -5,8 +5,8 @@ import threading
 
 import yaml
 from watchdog.events import FileSystemEventHandler
-from watchdog.observers.polling import PollingObserver
 from watchdog.observers import Observer
+from watchdog.observers.polling import PollingObserver
 
 from .logger import Logger
 
@@ -18,6 +18,8 @@ class Config:
     observer_lock = threading.Lock()
 
     def __init__(self, path, poll=True):
+        if not os.path.isabs(path):
+            path = os.path.abspath(path)
         self._path = path
         self._data = {}
         self._load()

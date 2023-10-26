@@ -26,3 +26,6 @@ path = "src/yuanfen/__init__.py"
 
 [tool.hatch.build.targets.sdist]
 include = ["/src/yuanfen"]
+
+[tool.isort]
+profile = "black"
