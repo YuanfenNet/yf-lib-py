@@ -1,5 +1,3 @@
-image: python:alpine
-
 stages:
     - deploy
 
