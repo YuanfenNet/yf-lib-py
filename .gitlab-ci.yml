@@ -7,8 +7,10 @@ deploy:
     stage: deploy
     script:
         - DATE=$(date +%Y.%m.%d)
+        - echo "date $DATE"
         - TAG_NUMBER=1
         - LAST_TAG=$(git describe --tags --abbrev=0)
+        - echo "last tag $LAST_TAG"
         - if [[ "$LAST_TAG" == *$DATE* ]]; then
           TAG_NUMBER=$((${LAST_TAG##*.} + 1))
           fi
