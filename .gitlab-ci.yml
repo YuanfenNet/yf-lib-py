@@ -19,9 +19,9 @@ deploy:
             fi
         - NEW_TAG="$DATE.$TAG_NUMBER"
         - echo "Creating tag $NEW_TAG"
-        - git remote add origin https://oauth2:${PUSH_TOKEN}@${CI_SERVER_HOST}:${CI_SERVER_PORT}/${CI_PROJECT_PATH}
+        - git remote add gitlab_origin https://oauth2:${PUSH_TOKEN}@${CI_SERVER_HOST}:${CI_SERVER_PORT}/${CI_PROJECT_PATH}
         - git tag "$NEW_TAG"
-        - git push origin "$NEW_TAG"
+        - git push gitlab_origin "$NEW_TAG"
 
         - pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
         - pip install hatch twine
