@@ -23,7 +23,8 @@ deploy:
         - hatch build
         - TWINE_USERNAME=gitlab-ci-token TWINE_PASSWORD=${CI_JOB_TOKEN} twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi dist/*
         - TWINE_USERNAME=${TWINE_USERNAME} TWINE_PASSWORD=${TWINE_PASSWORD} twine upload dist/*
-    only:
-        - $CI_DEFAULT_BRANCH
+    rules:
+        - if $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+
     tags:
         - nuc
