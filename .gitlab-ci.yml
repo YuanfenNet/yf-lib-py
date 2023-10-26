@@ -19,7 +19,10 @@ deploy:
             fi
         - NEW_TAG="$DATE.$TAG_NUMBER"
         - echo "Creating tag $NEW_TAG"
-        - git remote add gitlab_origin https://oauth2:${PUSH_TOKEN}@${CI_SERVER_HOST}:${CI_SERVER_PORT}/${CI_PROJECT_PATH}
+        - |
+            if ! git remote | grep -q "gitlab_origin"; then
+              git remote add gitlab_origin https://oauth2:${PUSH_TOKEN}@${CI_SERVER_HOST}:${CI_SERVER_PORT}/${CI_PROJECT_PATH}
+            fi
         - git tag "$NEW_TAG"
         - git push gitlab_origin "$NEW_TAG"
 
