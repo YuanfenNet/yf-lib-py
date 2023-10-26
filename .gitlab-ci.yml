@@ -12,6 +12,8 @@ deploy:
         - LAST_TAG=$(git describe --tags --abbrev=0)
         - echo "last tag $LAST_TAG"
         - if [[ "$LAST_TAG" == *$DATE* ]]; then
+            echo "is today"
+            echo "${LAST_TAG##*.}"
             TAG_NUMBER=$((${LAST_TAG##*.} + 1))
           fi
         - NEW_TAG="$DATE.$TAG_NUMBER"
