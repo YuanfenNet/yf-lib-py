@@ -1,8 +1,9 @@
-from .config import Config
-from .logger import Logger
-from .response import BaseResponse, SuccessResponse, ErrorResponse
-from .env import APP_ENV
 from . import time
+from .config import Config
+from .env import APP_ENV
+from .group_robot import GroupRobot
+from .logger import Logger
+from .response import BaseResponse, ErrorResponse, SuccessResponse
 
 __version__ = "0.0.0"
 
@@ -11,6 +12,7 @@ __all__ = [
     "BaseResponse",
     "Config",
     "ErrorResponse",
+    "GroupRobot",
     "Logger",
     "SuccessResponse",
     "VERSION",
