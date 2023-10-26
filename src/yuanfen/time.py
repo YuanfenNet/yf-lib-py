@@ -5,7 +5,9 @@ def now():
     return datetime.now()
 
 
-def format(dt: datetime = datetime.now(), format: str = "%Y-%m-%dT%H:%M:%S.%f") -> str:
+def format(dt: datetime = None, format: str = "%Y-%m-%dT%H:%M:%S.%f") -> str:
+    if dt is None:
+        dt = now()
     return dt.strftime(format)
 
 
