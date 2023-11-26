@@ -39,7 +39,7 @@ class Config:
             return None
 
     def _load(self):
-        with open(self._path, "r") as f:
+        with open(self._path, "r", encoding="utf-8") as f:
             if self._path.endswith(".json"):
                 self._data = json.load(f)
             elif self._path.endswith(".yaml") or self._path.endswith(".yml"):

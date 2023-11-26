@@ -29,3 +29,6 @@ include = ["/src/yuanfen"]
 
 [tool.isort]
 profile = "black"
+
+[tool.black]
+line-length = 180
