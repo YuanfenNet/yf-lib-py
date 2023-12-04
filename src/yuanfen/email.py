@@ -7,8 +7,8 @@ import chardet
 
 
 class Email:
-    def __init__(self, email, password, smtp_host, smtp_port, imap_host, imap_port):
-        self.email = email
+    def __init__(self, address, password, smtp_host, smtp_port, imap_host, imap_port):
+        self.address = address
         self.password = password
         self.smtp_server = smtp_host
         self.smtp_port = smtp_port
@@ -17,18 +17,18 @@ class Email:
 
     def send_text(self, to, subject, text):
         msg = MIMEText(text, "plain", "utf-8")
-        msg["From"] = self.email
+        msg["From"] = self.address
         msg["To"] = to
         msg["Subject"] = subject
 
         with smtplib.SMTP_SSL(self.smtp_server, self.smtp_port) as connection:
-            connection.login(self.email, self.password)
-            connection.sendmail(self.email, to, msg.as_string())
+            connection.login(self.address, self.password)
+            connection.sendmail(self.address, to, msg.as_string())
 
     def receive_emails(self, subject, count=1):
         emails = []
         with imaplib.IMAP4_SSL(self.imap_server, self.imap_port) as connection:
-            connection.login(self.email, self.password)
+            connection.login(self.address, self.password)
             connection.select()
 
             _, [ids] = connection.search(None, "SUBJECT", subject.encode("utf-8"))
