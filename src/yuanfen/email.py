@@ -1,25 +1,28 @@
 import email
 import imaplib
 import smtplib
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 import chardet
 
 
 class Email:
-    def __init__(self, address, password, smtp_host, smtp_port, imap_host, imap_port):
+    def __init__(self, address, password, smtp_host, smtp_port, imap_host, imap_port, sender_name=None):
         self.address = address
         self.password = password
         self.smtp_server = smtp_host
         self.smtp_port = smtp_port
         self.imap_server = imap_host
         self.imap_port = imap_port
+        self.sender_name = sender_name
 
     def send_text(self, to, subject, text):
-        msg = MIMEText(text, "plain", "utf-8")
-        msg["From"] = self.address
+        msg = MIMEMultipart()
+        msg["From"] = f"{self.sender_name or self.address} <{self.address}>"
         msg["To"] = to
         msg["Subject"] = subject
+        msg.attach(MIMEText(text, "html", "utf-8"))
 
         with smtplib.SMTP_SSL(self.smtp_server, self.smtp_port) as connection:
             connection.login(self.address, self.password)
