@@ -10,7 +10,7 @@ from watchdog.observers.polling import PollingObserver
 
 from .logger import Logger
 
-logger = Logger("yuanfen.config")
+logger = Logger("yuanfen")
 
 
 class Config:
