@@ -20,7 +20,7 @@ class Logger:
         self.stream_handler.setFormatter(log_formatter)
 
         self.file_handler = TimedRotatingFileHandler(
-            "logs/log",
+            f"logs/{name if name else 'log'}",
             when="midnight",
             backupCount=365,
             encoding="utf-8",
