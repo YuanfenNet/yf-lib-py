@@ -18,7 +18,7 @@ class Email:
         self.sender_name = sender_name
         self.timeout = timeout
 
-    def send_text(self, to, subject, text):
+    def send_text(self, to: str, subject: str, text: str):
         msg = MIMEMultipart()
         msg["From"] = f"{self.sender_name or self.address} <{self.address}>"
         msg["To"] = to
@@ -29,7 +29,7 @@ class Email:
             connection.login(self.address, self.password)
             connection.sendmail(self.address, to, msg.as_string())
 
-    def receive_emails(self, count, content_type, *criteria: str):
+    def receive_emails(self, count: int, content_type: str, *criteria: str):
         emails = []
         with imaplib.IMAP4_SSL(self.imap_server, self.imap_port, timeout=self.timeout) as connection:
             connection.login(self.address, self.password)
