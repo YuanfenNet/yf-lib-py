@@ -6,6 +6,9 @@ stages:
 deploy:
     stage: deploy
     script:
+        - pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+        - pip install hatch twine
+
         - DATE=$(date +%Y.%m.%d)
         - echo "date $DATE"
         - TAG_NUMBER=1
@@ -26,8 +29,6 @@ deploy:
         - git tag "$NEW_TAG"
         - git push gitlab_origin "$NEW_TAG"
 
-        - pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-        - pip install hatch twine
         - hatch version $NEW_TAG
         - hatch build
         - TWINE_USERNAME=gitlab-ci-token TWINE_PASSWORD=${CI_JOB_TOKEN} twine upload --repository-url ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/pypi dist/*
