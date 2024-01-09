@@ -29,7 +29,7 @@ class Email:
             connection.login(self.address, self.password)
             connection.sendmail(self.address, to, msg.as_string())
 
-    def receive_emails(self, count, *criteria: str):
+    def receive_emails(self, count, content_type, *criteria: str):
         emails = []
         with imaplib.IMAP4_SSL(self.imap_server, self.imap_port, timeout=self.timeout) as connection:
             connection.login(self.address, self.password)
@@ -41,7 +41,7 @@ class Email:
                 _, msg_data = connection.fetch(msg_id, "(RFC822)")
                 raw = email.message_from_bytes(msg_data[0][1])
                 for part in raw.walk():
-                    if part.get_content_type() == "text/html":
+                    if part.get_content_type() == content_type:
                         payload = part.get_payload(decode=True)
                         charset = chardet.detect(payload)["encoding"]
                         if charset == "GB2312":
