@@ -10,16 +10,17 @@ from watchdog.observers.polling import PollingObserver
 
 from .logger import Logger
 
-logger = Logger("yuanfen")
-
 
 class Config:
+    logger = None
     observer = None
     observer_lock = threading.Lock()
 
-    def __init__(self, path, poll=True):
+    def __init__(self, path, poll=True, logger=None):
         if not os.path.isabs(path):
             path = os.path.abspath(path)
+        Config.logger = logger or Logger()
+
         self._path = path
         self._data = {}
         self._load()
@@ -63,4 +64,4 @@ class ConfigChangeHandler(FileSystemEventHandler):
     def on_modified(self, event):
         if os.path.abspath(event.src_path) == os.path.abspath(self.config._path):
             self.config._load()
-            logger.info(f"{event.src_path} reloaded")
+            Config.logger.info(f"{event.src_path} reloaded")

@@ -29,13 +29,13 @@ class Email:
             connection.login(self.address, self.password)
             connection.sendmail(self.address, to, msg.as_string())
 
-    def receive_emails(self, subject, count=1):
+    def receive_emails(self, count, *criteria: str):
         emails = []
         with imaplib.IMAP4_SSL(self.imap_server, self.imap_port, timeout=self.timeout) as connection:
             connection.login(self.address, self.password)
             connection.select()
 
-            _, [ids] = connection.search(None, "SUBJECT", subject.encode("utf-8"))
+            _, [ids] = connection.search(None, *criteria)
             email_ids = ids.split()[-count:]
             for msg_id in email_ids:
                 _, msg_data = connection.fetch(msg_id, "(RFC822)")
