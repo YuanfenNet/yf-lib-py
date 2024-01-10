@@ -1,10 +1,22 @@
 import email
 import imaplib
 import smtplib
+from datetime import datetime
+from email.header import decode_header
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 import chardet
+
+
+def get_header_content(raw, key):
+    header = raw.get(key)
+    if header:
+        content, encoding = decode_header(header)[0]
+        if encoding:
+            content = content.decode(encoding)
+        return content
+    return None
 
 
 class Email:
@@ -40,11 +52,19 @@ class Email:
             for msg_id in email_ids:
                 _, msg_data = connection.fetch(msg_id, "(RFC822)")
                 raw = email.message_from_bytes(msg_data[0][1])
+                mail_info = {}
+                mail_info["subject"] = get_header_content(raw, "Subject")
+                mail_info["from"] = get_header_content(raw, "From")
+                mail_info["to"] = get_header_content(raw, "To")
+                mail_info["date"] = datetime.strptime(get_header_content(raw, "Date").split("(")[0].strip(), "%a, %d %b %Y %H:%M:%S %z")
+
                 for part in raw.walk():
                     if part.get_content_type() == content_type:
                         payload = part.get_payload(decode=True)
                         charset = chardet.detect(payload)["encoding"]
                         if charset == "GB2312":
                             charset = "GBK"
-                        emails.append(payload.decode(charset))
+                        mail_info["charset"] = charset
+                        mail_info["content"] = payload.decode(charset)
+                        emails.append(mail_info)
         return emails
