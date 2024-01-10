@@ -49,6 +49,7 @@ class Config:
                         self.data[section][key] = value
             else:
                 raise ValueError("Unsupported config file format")
+        self.logger.info(f"{self.file_path} loaded")
 
 
 class ConfigChangeHandler(FileSystemEventHandler):
@@ -56,6 +57,5 @@ class ConfigChangeHandler(FileSystemEventHandler):
         super().__init__()
         self.config = config
 
-    def on_modified(self, event):
+    def on_modified(self):
         self.config.load()
-        self.config.logger.info(f"{event.src_path} reloaded")
