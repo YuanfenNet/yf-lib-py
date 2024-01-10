@@ -29,10 +29,7 @@ class Config:
             return cls.instances[path]
 
     def __getitem__(self, key):
-        try:
-            return self.data[key]
-        except KeyError:
-            return None
+        return self.data.get(key, None)
 
     def load(self):
         with open(self.file_path, "r", encoding="utf-8") as f:
@@ -57,5 +54,5 @@ class ConfigChangeHandler(FileSystemEventHandler):
         super().__init__()
         self.config = config
 
-    def on_modified(self):
+    def on_modified(self, _):
         self.config.load()
