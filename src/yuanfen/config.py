@@ -1,7 +1,6 @@
 import configparser
 import json
 import os
-import threading
 
 import yaml
 from watchdog.events import FileSystemEventHandler
@@ -12,46 +11,42 @@ from .logger import Logger
 
 
 class Config:
-    logger = None
-    observer = None
-    observer_lock = threading.Lock()
+    instances = {}
 
-    def __init__(self, path, poll=True, logger=None):
-        if not os.path.isabs(path):
-            path = os.path.abspath(path)
-        Config.logger = logger or Logger()
-
-        self._path = path
-        self._data = {}
-        self._load()
-
-        with Config.observer_lock:
-            if Config.observer is None:
-                Config.observer = PollingObserver() if poll else Observer()
-                Config.observer.start()
-
-            self.observer = Config.observer
-            self.observer.schedule(ConfigChangeHandler(self), os.path.dirname(path), recursive=False)
+    def __new__(cls, path, poll=True, logger=None):
+        if path not in cls.instances:
+            instance = super().__new__(cls)
+            instance.file_path = os.path.abspath(path)
+            instance.logger = logger or Logger()
+            instance.data = {}
+            instance.load()
+            instance.observer = PollingObserver() if poll else Observer()
+            instance.observer.schedule(ConfigChangeHandler(instance), path=instance.file_path, recursive=False)
+            instance.observer.start()
+            cls.instances[path] = instance
+            return instance
+        else:
+            return cls.instances[path]
 
     def __getitem__(self, key):
         try:
-            return self._data[key]
+            return self.data[key]
         except KeyError:
             return None
 
-    def _load(self):
-        with open(self._path, "r", encoding="utf-8") as f:
-            if self._path.endswith(".json"):
-                self._data = json.load(f)
-            elif self._path.endswith(".yaml") or self._path.endswith(".yml"):
-                self._data = yaml.safe_load(f)
-            elif self._path.endswith(".ini"):
+    def load(self):
+        with open(self.file_path, "r", encoding="utf-8") as f:
+            if self.file_path.endswith(".json"):
+                self.data = json.load(f)
+            elif self.file_path.endswith(".yaml") or self.file_path.endswith(".yml"):
+                self.data = yaml.safe_load(f)
+            elif self.file_path.endswith(".ini"):
                 parser = configparser.ConfigParser()
                 parser.read_file(f)
                 for section in parser.sections():
-                    self._data[section] = {}
+                    self.data[section] = {}
                     for key, value in parser.items(section):
-                        self._data[section][key] = value
+                        self.data[section][key] = value
             else:
                 raise ValueError("Unsupported config file format")
 
@@ -62,6 +57,5 @@ class ConfigChangeHandler(FileSystemEventHandler):
         self.config = config
 
     def on_modified(self, event):
-        if os.path.abspath(event.src_path) == os.path.abspath(self.config._path):
-            self.config._load()
-            Config.logger.info(f"{event.src_path} reloaded")
+        self.config.load()
+        self.config.logger.info(f"{event.src_path} reloaded")
