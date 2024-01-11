@@ -35,36 +35,47 @@ class Email:
         msg["From"] = f"{self.sender_name or self.address} <{self.address}>"
         msg["To"] = to
         msg["Subject"] = subject
-        msg.attach(MIMEText(text, "html", "utf-8"))
+        msg.attach(MIMEText(text, "plain", "utf-8"))
 
         with smtplib.SMTP_SSL(self.smtp_server, self.smtp_port, timeout=self.timeout) as connection:
             connection.login(self.address, self.password)
             connection.sendmail(self.address, to, msg.as_string())
 
-    def receive_emails(self, count: int, content_type: str, *criteria: str):
-        emails = []
+    def search_ids(self, count: int, *criteria: str):
         with imaplib.IMAP4_SSL(self.imap_server, self.imap_port, timeout=self.timeout) as connection:
             connection.login(self.address, self.password)
             connection.select()
-
             _, [ids] = connection.search(None, *criteria)
-            email_ids = ids.split()[-count:]
-            for msg_id in email_ids:
-                _, msg_data = connection.fetch(msg_id, "(RFC822)")
-                raw = email.message_from_bytes(msg_data[0][1])
-                mail_info = {}
-                mail_info["subject"] = get_header_content(raw, "Subject")
-                mail_info["from"] = get_header_content(raw, "From")
-                mail_info["to"] = get_header_content(raw, "To")
-                mail_info["date"] = datetime.strptime(get_header_content(raw, "Date").split("(")[0].strip(), "%a, %d %b %Y %H:%M:%S %z")
+            return ids.split()[-count:]
 
-                for part in raw.walk():
-                    if part.get_content_type() == content_type:
-                        payload = part.get_payload(decode=True)
-                        charset = chardet.detect(payload)["encoding"]
-                        if charset == "GB2312":
-                            charset = "GBK"
-                        mail_info["charset"] = charset
-                        mail_info["content"] = payload.decode(charset)
-                        emails.append(mail_info)
-        return emails
+    def fetch(self, message_id: str, content_type: str = "text/html"):
+        with imaplib.IMAP4_SSL(self.imap_server, self.imap_port, timeout=self.timeout) as connection:
+            connection.login(self.address, self.password)
+            connection.select()
+            _, msg_data = connection.fetch(message_id, "(RFC822)")
+            raw = email.message_from_bytes(msg_data[0][1])
+            mail_info = {}
+            mail_info["subject"] = get_header_content(raw, "Subject")
+            mail_info["from"] = get_header_content(raw, "From")
+            mail_info["to"] = get_header_content(raw, "To")
+            date = get_header_content(raw, "Date")
+            if date:
+                mail_info["date"] = datetime.strptime(date.split("(")[0].strip(), "%a, %d %b %Y %H:%M:%S %z")
+            else:
+                mail_info["date"] = datetime.strptime(get_header_content(raw, "Received").split(";")[1].strip(), "%a, %d %b %Y %H:%M:%S %z")
+            for part in raw.walk():
+                if part.get_content_type() == content_type:
+                    payload = part.get_payload(decode=True)
+                    charset = chardet.detect(payload)["encoding"]
+                    if charset == "GB2312":
+                        charset = "GBK"
+                    mail_info["charset"] = charset
+                    mail_info["content"] = payload.decode(charset)
+                    break
+            return mail_info
+
+    def search(self, count: int, content_type: str, *criteria: str):
+        messages = []
+        for message_id in self.search_ids(count, *criteria):
+            messages.append(self.fetch(message_id, content_type))
+        return messages
