@@ -16,7 +16,14 @@ classifiers = [
     "Programming Language :: Python :: 3",
 ]
 requires-python = '>=3'
-dependencies = ["chardet", "pydantic>=2.4.2", "pyyaml", "requests", "watchdog"]
+dependencies = [
+    "chardet",
+    "pydantic>=2.4.2",
+    "pyyaml",
+    "redis",
+    "requests",
+    "watchdog",
+]
 
 [project.urls]
 Homepage = "https://github.com/YuanfenNet/yf-lib-py"
