@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 
 
@@ -22,3 +23,7 @@ def format_duration(seconds: int) -> str:
         return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
     else:
         return f"{minutes:02d}:{seconds:02d}"
+
+
+def sleep(secs: float):
+    time.sleep(secs)
