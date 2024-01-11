@@ -46,7 +46,7 @@ class Email:
             connection.login(self.address, self.password)
             connection.select()
             _, [ids] = connection.search(None, *criteria)
-            return ids.split()[-count:]
+            return ids.decode("utf-8").split()[-count:]
 
     def fetch(self, message_id: str, content_type: str = "text/html"):
         with imaplib.IMAP4_SSL(self.imap_server, self.imap_port, timeout=self.timeout) as connection:
