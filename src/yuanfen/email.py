@@ -48,7 +48,7 @@ class Email:
             _, [ids] = connection.search(None, *criteria)
             return ids.decode("utf-8").split()[-count:]
 
-    def fetch(self, message_id: str, content_type: str = "text/html"):
+    def fetch(self, message_id: str, content_type: str = None):
         with imaplib.IMAP4_SSL(self.imap_server, self.imap_port, timeout=self.timeout) as connection:
             connection.login(self.address, self.password)
             connection.select()
@@ -64,14 +64,19 @@ class Email:
             else:
                 mail_info["date"] = datetime.strptime(get_header_content(raw, "Received").split(";")[1].strip(), "%a, %d %b %Y %H:%M:%S %z")
             for part in raw.walk():
-                if part.get_content_type() == content_type:
-                    payload = part.get_payload(decode=True)
-                    charset = chardet.detect(payload)["encoding"]
-                    if charset == "GB2312":
-                        charset = "GBK"
-                    mail_info["charset"] = charset
-                    mail_info["content"] = payload.decode(charset)
-                    break
+                if content_type:
+                    if part.get_content_type() != content_type:
+                        continue
+                else:
+                    if part.get_content_type() != "text/plain" and part.get_content_type() != "text/html":
+                        continue
+                payload = part.get_payload(decode=True)
+                charset = chardet.detect(payload)["encoding"]
+                if charset == "GB2312":
+                    charset = "GBK"
+                mail_info["charset"] = charset
+                mail_info["content"] = payload.decode(charset)
+                break
             return mail_info
 
     def search(self, count: int, content_type: str, *criteria: str):
