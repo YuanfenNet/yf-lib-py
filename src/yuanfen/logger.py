@@ -31,7 +31,7 @@ class Logger:
     def info(self, msg):
         self.logger.info(f"{self.msg_prefix}{msg}")
 
-    def warn(self, msg):
+    def warning(self, msg):
         self.logger.warning(f"{self.msg_prefix}{msg}")
 
     def error(self, msg):
