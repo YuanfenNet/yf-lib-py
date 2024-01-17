@@ -45,14 +45,14 @@ class Email:
         with imaplib.IMAP4_SSL(self.imap_server, self.imap_port, timeout=self.timeout) as connection:
             connection.login(self.address, self.password)
             connection.select()
-            _, [ids] = connection.search(None, *criteria)
+            _, [ids] = connection.uid("search", None, *criteria)
             return ids.decode("utf-8").split()[-count:]
 
     def fetch(self, message_id: str, content_type: str = None):
         with imaplib.IMAP4_SSL(self.imap_server, self.imap_port, timeout=self.timeout) as connection:
             connection.login(self.address, self.password)
             connection.select()
-            _, msg_data = connection.fetch(message_id, "(RFC822)")
+            _, msg_data = connection.uid("fetch", message_id, "(RFC822)")
             raw = email.message_from_bytes(msg_data[0][1])
             mail_info = {}
             mail_info["subject"] = get_header_content(raw, "Subject")
