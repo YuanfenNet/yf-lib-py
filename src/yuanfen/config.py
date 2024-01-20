@@ -49,14 +49,14 @@ class Config:
 
 
 class ConfigChangeHandler(FileSystemEventHandler):
-    def __init__(self, config):
+    def __init__(self, config: Config):
         super().__init__()
         self.config = config
 
     def on_modified(self, _):
-        self.logger.info(f"{self.file_path} modified")
+        self.config.logger.info(f"{self.file_path} modified")
         self.config.load()
 
     def on_created(self, _):
-        self.logger.info(f"{self.file_path} created")
+        self.config.logger.info(f"{self.file_path} created")
         self.config.load()
