@@ -54,9 +54,9 @@ class ConfigChangeHandler(FileSystemEventHandler):
         self.config = config
 
     def on_modified(self, _):
-        self.config.logger.info(f"{self.file_path} modified")
+        self.config.logger.info(f"{self.config.file_path} modified")
         self.config.load()
 
     def on_created(self, _):
-        self.config.logger.info(f"{self.file_path} created")
+        self.config.logger.info(f"{self.config.file_path} created")
         self.config.load()
