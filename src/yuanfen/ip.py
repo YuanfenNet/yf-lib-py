@@ -18,6 +18,8 @@ def get_public_ip():
 
 # 获取 IP 归属地
 def get_ip_location(ip: str, source="baidu"):
+    if not ip:
+        return None
     if source == "baidu":
         try:
             result = requests.get(f"https://opendata.baidu.com/api.php?query={ip}&resource_id=6006", timeout=10).json()
