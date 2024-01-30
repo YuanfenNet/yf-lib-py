@@ -7,10 +7,10 @@ name = "yuanfen"
 dynamic = ["version"]
 description = "Yuanfen Python Library"
 readme = "README.md"
-license = "ISC"
+license = "MIT"
 authors = [{ name = "Bean", email = "bean@yuanfen.net" }]
 classifiers = [
-    "License :: OSI Approved :: ISC License (ISCL)",
+    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     'Programming Language :: Python',
     "Programming Language :: Python :: 3",
