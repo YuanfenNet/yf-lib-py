@@ -6,6 +6,7 @@ from .group_robot import GroupRobot
 from .logger import Logger
 from .redis import Redis
 from .response import BaseResponse, ErrorResponse, SuccessResponse
+from .version import Version
 
 __version__ = "0.0.0"
 
@@ -19,7 +20,7 @@ __all__ = [
     "Logger",
     "Redis",
     "SuccessResponse",
-    "VERSION",
+    "Version",
     "ip",
     "time",
 ]
