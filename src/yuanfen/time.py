@@ -8,6 +8,17 @@ def now():
     return datetime.now()
 
 
+# get current timestamp
+def current_timestamp(length: int = 16) -> int:
+    return get_timestamp(None, length)
+
+
+# get timestamp from datetime
+def get_timestamp(dt: datetime = None, length: int = 16) -> int:
+    _timestamp = dt.timestamp() if dt else time.time()
+    return int(_timestamp * 10 ** (length - 10))
+
+
 def format(dt: datetime = None, format: str = "%Y-%m-%dT%H:%M:%S.%f") -> str:
     if dt is None:
         dt = now()
