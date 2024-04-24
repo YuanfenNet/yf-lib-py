@@ -4,7 +4,7 @@ from .email import Email
 from .env import APP_ENV
 from .group_robot import GroupRobot
 from .logger import Logger
-from .redis import Redis
+from .redis import Redis, RedisLock
 from .response import BaseResponse, ErrorResponse, SuccessResponse
 from .version import Version
 
@@ -19,6 +19,7 @@ __all__ = [
     "GroupRobot",
     "Logger",
     "Redis",
+    "RedisLock",
     "SuccessResponse",
     "Version",
     "ip",
