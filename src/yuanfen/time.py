@@ -4,8 +4,9 @@ from datetime import datetime
 import pytz
 
 
-def now():
-    return datetime.now()
+def now(tz: str = "Asia/Shanghai", with_tz: bool = False) -> datetime:
+    now_with_tz = datetime.now(tz=pytz.timezone(tz))
+    return now_with_tz if with_tz else now_with_tz.replace(tzinfo=None)
 
 
 # get current timestamp
@@ -32,8 +33,7 @@ def parse(dt_str: str, format: str = "%Y-%m-%dT%H:%M:%S.%f") -> datetime:
 def remove_tz(dt: datetime, tz: str = "Asia/Shanghai") -> datetime:
     if dt.tzinfo is None:
         return dt
-    timezone = pytz.timezone(tz)
-    return dt.astimezone(timezone).replace(tzinfo=None)
+    return dt.astimezone(pytz.timezone(tz)).replace(tzinfo=None)
 
 
 def format_duration(seconds: int) -> str:
