@@ -3,7 +3,7 @@ import time
 
 
 class RedisLock:
-    def __init__(self, redis_client, lock_key, timeout=0, retry_interval=0.1):
+    def __init__(self, redis_client, lock_key, timeout=10, retry_interval=None):
         self.redis_client = redis_client
         self.lock_key = lock_key
         self.timeout = timeout
@@ -12,12 +12,15 @@ class RedisLock:
 
     def acquire(self):
         start_time = time.time()
-        while time.time() - start_time <= self.timeout:
+        while time.time() - start_time < self.timeout:
             if self.redis_client.set(self.lock_key, "1", ex=self.timeout, nx=True):
                 self.locked = True
                 return True
+            elif not self.retry_interval:
+                return False
             else:
                 time.sleep(self.retry_interval)
+
         return False
 
     def release(self):
