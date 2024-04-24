@@ -47,7 +47,7 @@ class Redis:
         return self.redis_client.get(self.prefixed(key))
 
     def set(self, key: str, value: str, ex=None, px=None, nx=False):
-        self.redis_client.set(self.prefixed(key), value, ex=ex, px=px, nx=nx)
+        return self.redis_client.set(self.prefixed(key), value, ex=ex, px=px, nx=nx)
 
     def delete(self, key: str):
-        self.redis_client.delete(self.prefixed(key))
+        return self.redis_client.delete(self.prefixed(key))
