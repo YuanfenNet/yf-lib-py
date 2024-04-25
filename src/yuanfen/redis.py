@@ -51,3 +51,6 @@ class Redis:
 
     def delete(self, key: str):
         return self.redis_client.delete(self.prefixed(key))
+
+    def incr(self, key: str, amount=1):
+        return self.redis_client.incr(self.prefixed(key), amount)
