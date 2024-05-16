@@ -53,7 +53,7 @@ class Email:
             connection.login(self.address, self.password)
             connection.select()
             _, msg_data = connection.uid("fetch", message_id, "(RFC822)")
-            if not msg_data:
+            if not msg_data[0]:
                 return None
             raw = email.message_from_bytes(msg_data[0][1])
             mail_info = {}
