@@ -53,6 +53,8 @@ class Email:
             connection.login(self.address, self.password)
             connection.select()
             _, msg_data = connection.uid("fetch", message_id, "(RFC822)")
+            if not msg_data:
+                return None
             raw = email.message_from_bytes(msg_data[0][1])
             mail_info = {}
             mail_info["subject"] = get_header_content(raw, "Subject")
@@ -82,5 +84,7 @@ class Email:
     def search(self, count: int, content_type: str, *criteria: str):
         messages = []
         for message_id in self.search_ids(count, *criteria):
-            messages.append(self.fetch(message_id, content_type))
+            message = self.fetch(message_id, content_type)
+            if message:
+                messages.append(message)
         return messages
