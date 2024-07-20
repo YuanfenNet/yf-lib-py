@@ -1,0 +1,68 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3
+
+      - name: Install dependencies
+        run: |
+          pip install hatch twine
+
+      - name: Set DATE variable
+        run: echo "DATE=$(date +%Y.%-m.%-d)" >> $GITHUB_ENV
+
+      - name: Display date
+        run: echo "date ${{ env.DATE }}"
+
+      - name: Set initial TAG_NUMBER
+        run: echo "TAG_NUMBER=1" >> $GITHUB_ENV
+
+      - name: Get last tag
+        id: get_last_tag
+        run: echo "LAST_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
+      - name: Display last tag
+        run: echo "last tag ${{ env.LAST_TAG }}"
+
+      - name: Determine new tag
+        run: |
+          if [[ "${{ env.LAST_TAG }}" == *"${{ env.DATE }}"* ]]; then
+            echo "is today"
+            echo "${{ env.LAST_TAG##*. }}"
+            echo "TAG_NUMBER=$((${{ env.LAST_TAG##*. }} + 1))" >> $GITHUB_ENV
+          fi
+          echo "NEW_TAG=${{ env.DATE }}.${{ env.TAG_NUMBER }}" >> $GITHUB_ENV
+
+      - name: Display new tag
+        run: echo "Creating tag ${{ env.NEW_TAG }}"
+
+      - name: Create and push tag
+        run: |
+          git tag "${{ env.NEW_TAG }}"
+          git push origin "${{ env.NEW_TAG }}"
+
+      - name: Update version with hatch
+        run: hatch version ${{ env.NEW_TAG }}
+
+      - name: Build with hatch
+        run: hatch build
+
+      - name: Upload to PyPI
+        env:
+          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
+        run: twine upload dist/*
