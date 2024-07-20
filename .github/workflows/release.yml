@@ -24,49 +24,21 @@ jobs:
         run: |
           pip install hatch twine
 
-      - name: Set DATE variable
-        run: echo "DATE=$(date +%Y.%-m.%-d)" >> $GITHUB_ENV
-
-      - name: Display date
-        run: echo "date ${{ env.DATE }}"
-
-      - name: Set initial TAG_NUMBER
-        run: echo "TAG_NUMBER=1" >> $GITHUB_ENV
-
-      - name: Get last tag
-        id: get_last_tag
-        run: echo "LAST_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
-
-      - name: Display last tag
-        run: echo "last tag ${{ env.LAST_TAG }}"
-
-      - name: Determine new tag
-        id: determine_tag
+      - name: Version tag and build
         run: |
-          # Determine if the last tag was created today
-          if [[ "${{ env.LAST_TAG }}" == *"${{ env.DATE }}"* ]]; then
-            TAG_NUMBER=$(echo "${{ env.LAST_TAG }}" | awk -F. '{print $NF}')
+          DATE=$(date +%Y.%-m.%-d)
+          LAST_TAG=$(git describe --tags --abbrev=0)
+          if [[ "${{ LAST_TAG }}" == *"${{ DATE }}"* ]]; then
+            TAG_NUMBER=$(echo "${{ LAST_TAG }}" | awk -F. '{print $NF}')
             TAG_NUMBER=$((TAG_NUMBER + 1))
           else
             TAG_NUMBER=1
           fi
-          NEW_TAG="${{ env.DATE }}.${TAG_NUMBER}"
-          echo "NEW_TAG=${NEW_TAG}" >> $GITHUB_ENV
-          echo "TAG_NUMBER=${TAG_NUMBER}" >> $GITHUB_ENV
-
-      - name: Display new tag
-        run: echo "Creating tag ${{ env.NEW_TAG }}"
-
-      - name: Create and push tag
-        run: |
-          git tag "${{ env.NEW_TAG }}"
-          git push origin "${{ env.NEW_TAG }}"
-
-      - name: Update version with hatch
-        run: hatch version ${{ env.NEW_TAG }}
-
-      - name: Build with hatch
-        run: hatch build
+          NEW_TAG="${{ DATE }}.${TAG_NUMBER}"
+          git tag "${{ NEW_TAG }}"
+          git push origin "${{ NEW_TAG }}"
+          hatch version ${{ NEW_TAG }}
+          hatch build
 
       - name: Upload to PyPI
         env:
