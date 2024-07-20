@@ -31,6 +31,9 @@ class Config:
     def __getitem__(self, key):
         return self.data.get(key, None)
 
+    def get(self, key, default=None):
+        return self.data.get(key, default)
+
     def load(self):
         with open(self.file_path, "r", encoding="utf-8") as f:
             if self.file_path.endswith(".json"):
