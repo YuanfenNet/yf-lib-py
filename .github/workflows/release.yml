@@ -28,16 +28,16 @@ jobs:
         run: |
           DATE=$(date +%Y.%-m.%-d)
           LAST_TAG=$(git describe --tags --abbrev=0)
-          if [[ "${{ LAST_TAG }}" == *"${{ DATE }}"* ]]; then
-            TAG_NUMBER=$(echo "${{ LAST_TAG }}" | awk -F. '{print $NF}')
+          if [[ "$LAST_TAG" == *"$DATE"* ]]; then
+            TAG_NUMBER=$(echo "$LAST_TAG" | awk -F. '{print $NF}')
             TAG_NUMBER=$((TAG_NUMBER + 1))
           else
             TAG_NUMBER=1
           fi
-          NEW_TAG="${{ DATE }}.${TAG_NUMBER}"
-          git tag "${{ NEW_TAG }}"
-          git push origin "${{ NEW_TAG }}"
-          hatch version ${{ NEW_TAG }}
+          NEW_TAG="$DATE.${TAG_NUMBER}"
+          git tag "$NEW_TAG"
+          git push origin "$NEW_TAG"
+          hatch version "$NEW_TAG"
           hatch build
 
       - name: Upload to PyPI
