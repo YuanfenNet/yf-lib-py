@@ -1,4 +1,4 @@
-from . import ip, time
+from . import hash, ip, time
 from .config import Config
 from .email import Email
 from .env import APP_ENV
@@ -20,6 +20,7 @@ __all__ = [
     "RedisLock",
     "SuccessResponse",
     "Version",
+    "hash",
     "ip",
     "time",
 ]

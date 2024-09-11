@@ -13,9 +13,9 @@ Support .json, .yaml, .ini files.
 Support auto reloading while config file changes.
 
 ```python
-config_json = Config(os.path.abspath("config.json"))
-config_yaml = Config(os.path.abspath("config.yaml"))
-config_ini = Config(os.path.abspath("config.ini"))
+config_json = Config("configs/config.json")
+config_yaml = Config("configs/config.yaml")
+config_ini = Config("configs/config.ini")
 
 print(config_ini["app"]["config_a"])
 print(config_yaml["movie"]["name"])
@@ -30,7 +30,7 @@ logger = Logger(name="my-logger", level=logging.INFO)
 
 logger.debug("debug log")
 logger.info("info log")
-logger.warn("warn log")
+logger.warning("warning log")
 logger.error("error log")
 ```
 
@@ -73,4 +73,11 @@ Webhook group robot
 ```python
 robot = GroupRobot(webhook="your robot's webhook path")
 robot.send(data)
+```
+
+## hash
+
+```python
+from yuanfen import hash
+get_file_hash("path/to/file")
 ```

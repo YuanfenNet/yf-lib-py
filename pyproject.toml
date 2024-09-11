@@ -18,9 +18,6 @@ classifiers = [
 ]
 packages = [{ include = "yuanfen", from = "src" }]
 
-[tool.poetry.urls]
-Homepage = "https://github.com/YuanfenNet/yf-lib-py"
-
 [tool.poetry.dependencies]
 python = "^3.9"
 chardet = "^5.2.0"
