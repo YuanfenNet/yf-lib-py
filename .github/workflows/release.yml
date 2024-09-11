@@ -20,9 +20,23 @@ jobs:
         with:
           python-version: 3
 
+      - name: Install poetry
+        run: |
+          pip install poetry
+
+      - name: Configure poetry
+        run: |
+          poetry config virtualenvs.in-project true
+
+      - name: Cache the virtualenv
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('**/poetry.lock') }}
+
       - name: Install dependencies
         run: |
-          pip install hatch twine
+          poetry install
 
       - name: Version tag and build
         run: |
@@ -37,11 +51,10 @@ jobs:
           NEW_TAG="$DATE.${TAG_NUMBER}"
           git tag "$NEW_TAG"
           git push origin "$NEW_TAG"
-          hatch version "$NEW_TAG"
-          hatch build
+          poetry version "$NEW_TAG"
+          poetry build
 
       - name: Upload to PyPI
         env:
-          TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
-          TWINE_PASSWORD: ${{ secrets.TWINE_PASSWORD }}
-        run: twine upload dist/*
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.POETRY_PYPI_TOKEN_PYPI }}
+        run: poetry publish

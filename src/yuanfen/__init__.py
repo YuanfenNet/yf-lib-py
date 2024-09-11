@@ -8,8 +8,6 @@ from .redis import Redis, RedisLock
 from .response import BaseResponse, ErrorResponse, SuccessResponse
 from .version import Version
 
-__version__ = "0.0.0"
-
 __all__ = [
     "APP_ENV",
     "BaseResponse",

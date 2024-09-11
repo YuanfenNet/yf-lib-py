@@ -3,8 +3,8 @@
 ## build && upload
 
 ```bash
-$ hatch build
-$ python3 -m twine upload dist/*
+$ poetry build
+$ poetry publish
 ```
 
 ## Config
