@@ -1,5 +1,5 @@
 [project]
-    authors = [{ name = "Bean", email = "bean@yuanfen.ne" }]
+    authors = [{ name = "Bean", email = "bean@yuanfen.net" }]
     classifiers = [
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
