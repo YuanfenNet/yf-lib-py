@@ -29,11 +29,11 @@
     build-backend = "poetry.core.masonry.api"
     requires = ["poetry-core>=2.0.0,<3.0.0"]
 
-[tool.poetry]
-    packages = [{ include = "yuanfen", from = "src" }]
+[tool.black]
+    line-length = 180
 
 [tool.isort]
     profile = "black"
 
-[tool.black]
-    line-length = 180
+[tool.poetry]
+    packages = [{ include = "yuanfen", from = "src" }]
