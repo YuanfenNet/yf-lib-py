@@ -1,4 +1,4 @@
-import time
+import time as py_time
 from datetime import datetime
 
 import pytz
@@ -16,7 +16,7 @@ def current_timestamp(length: int = 16) -> int:
 
 # get timestamp from datetime
 def get_timestamp(dt: datetime = None, length: int = 16) -> int:
-    _timestamp = dt.timestamp() if dt else time.time()
+    _timestamp = dt.timestamp() if dt else py_time.time()
     return int(_timestamp * 10 ** (length - 10))
 
 
@@ -46,8 +46,8 @@ def format_duration(seconds: int) -> str:
 
 
 def sleep(secs: float):
-    time.sleep(secs)
+    py_time.sleep(secs)
 
 
 def time():
-    return time.time()
+    return py_time.time()
