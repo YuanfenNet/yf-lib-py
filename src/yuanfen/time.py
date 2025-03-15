@@ -47,3 +47,7 @@ def format_duration(seconds: int) -> str:
 
 def sleep(secs: float):
     time.sleep(secs)
+
+
+def time():
+    return time.time()
