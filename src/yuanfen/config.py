@@ -13,16 +13,21 @@ from .logger import Logger
 class Config:
     instances = {}
 
+    def __init__(self, path, poll=True, logger=None):
+        # 只在新实例创建时初始化
+        if not hasattr(self, "_initialized"):
+            self.file_path: str = os.path.abspath(path)
+            self.logger: Logger = logger or Logger()
+            self.data: dict = {}
+            self.load()
+            self.observer = PollingObserver() if poll else Observer()
+            self.observer.schedule(ConfigChangeHandler(self), path=self.file_path, recursive=False)
+            self.observer.start()
+            self._initialized = True
+
     def __new__(cls, path, poll=True, logger=None):
         if path not in cls.instances:
             instance = super().__new__(cls)
-            instance.file_path = os.path.abspath(path)
-            instance.logger = logger or Logger()
-            instance.data = {}
-            instance.load()
-            instance.observer = PollingObserver() if poll else Observer()
-            instance.observer.schedule(ConfigChangeHandler(instance), path=instance.file_path, recursive=False)
-            instance.observer.start()
             cls.instances[path] = instance
             return instance
         else:
@@ -56,10 +61,10 @@ class ConfigChangeHandler(FileSystemEventHandler):
         super().__init__()
         self.config = config
 
-    def on_modified(self, _):
+    def on_modified(self, event):
         self.config.logger.info(f"{self.config.file_path} modified")
         self.config.load()
 
-    def on_created(self, _):
+    def on_created(self, event):
         self.config.logger.info(f"{self.config.file_path} created")
         self.config.load()

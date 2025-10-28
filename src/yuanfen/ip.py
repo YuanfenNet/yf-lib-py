@@ -5,12 +5,12 @@ import requests
 def get_public_ip():
     try:
         return requests.get("https://api.ipify.org/", timeout=30).text.strip()
-    except:
+    except Exception:
         pass
 
     try:
         return requests.get("https://myip4.ipip.net/s", timeout=30).text.strip()
-    except:
+    except Exception:
         pass
 
     return None

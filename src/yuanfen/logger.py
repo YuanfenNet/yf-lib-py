@@ -1,16 +1,17 @@
 import logging
 import os
 from logging.handlers import TimedRotatingFileHandler
+from typing import Optional
 
 
 class Logger:
-    def __init__(self, name: str = None, level: int = logging.INFO, logger: logging.Logger = None):
+    def __init__(self, name: Optional[str] = None, level: int = logging.INFO, logger: Optional[logging.Logger] = None):
         os.makedirs("logs", exist_ok=True)
 
         self.logger = logger if logger else logging.getLogger()
 
         if len(self.logger.handlers) == 0:
-            log_formatter = logging.Formatter(f"%(asctime)s [%(levelname)-7s] %(message)s")
+            log_formatter = logging.Formatter("%(asctime)s [%(levelname)-7s] %(message)s")
 
             self.stream_handler = logging.StreamHandler()
             self.stream_handler.setFormatter(log_formatter)
