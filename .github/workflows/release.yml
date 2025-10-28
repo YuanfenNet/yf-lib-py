@@ -11,32 +11,20 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
       - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: 3
+        run: uv python install
 
-      - name: Install poetry
-        run: |
-          pip install poetry
-
-      - name: Configure poetry
-        run: |
-          poetry config virtualenvs.in-project true
-
-      - name: Cache the virtualenv
-        uses: actions/cache@v4
-        with:
-          path: .venv
-          key: ${{ runner.os }}-venv-${{ hashFiles('**/poetry.lock') }}
-
-      - name: Install dependencies
-        run: |
-          poetry install
+      - name: Install the project
+        run: uv sync --locked --all-extras --dev
 
       - name: Version tag and build
         run: |
@@ -51,10 +39,8 @@ jobs:
           NEW_TAG="$DATE.${TAG_NUMBER}"
           git tag "$NEW_TAG"
           git push origin "$NEW_TAG"
-          poetry version "$NEW_TAG"
-          poetry build
+          uv version "$NEW_TAG"
+          uv build
 
-      - name: Upload to PyPI
-        env:
-          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.POETRY_PYPI_TOKEN_PYPI }}
-        run: poetry publish
+      - name: Publish
+        run: uv publish

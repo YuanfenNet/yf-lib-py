@@ -1,12 +1,5 @@
 # Yuanfen Python Library
 
-## build && upload
-
-```bash
-$ poetry build
-$ poetry publish
-```
-
 ## Config
 
 Support .json, .yaml, .ini files.

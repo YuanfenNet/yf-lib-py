@@ -7,13 +7,13 @@
         'Programming Language :: Python',
     ]
     dependencies = [
-        "chardet (>=5.2.0,<6.0.0)",
-        "pydantic (>=2.10.6,<3.0.0)",
-        "pytz (>=2025.1,<2026.0)",
-        "pyyaml (>=6.0.2,<7.0.0)",
-        "redis (>=6.2.0,<7.0.0)",
-        "requests (>=2.32.3,<3.0.0)",
-        "watchdog (>=6.0.0,<7.0.0)",
+        "chardet~=5.2",
+        "pydantic~=2.10",
+        "pytz~=2025.1",
+        "pyyaml~=6.0",
+        "redis~=7.0",
+        "requests~=2.0",
+        "watchdog~=6.0",
     ]
     description = "Yuanfen Python Library"
     license = { text = "MIT" }
@@ -25,15 +25,5 @@
 [project.urls]
     repository = "https://github.com/YuanfenNet/yf-lib-py"
 
-[build-system]
-    build-backend = "poetry.core.masonry.api"
-    requires = ["poetry-core>=2.0.0,<3.0.0"]
-
-[tool.black]
-    line-length = 180
-
-[tool.isort]
-    profile = "black"
-
-[tool.poetry]
-    packages = [{ include = "yuanfen", from = "src" }]
+[dependency-groups]
+    dev = ["ruff>=0.14.1"]
