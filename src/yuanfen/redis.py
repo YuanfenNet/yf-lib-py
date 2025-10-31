@@ -1,5 +1,6 @@
-import redis
 import time
+
+import redis
 
 
 class RedisLock:
@@ -30,7 +31,7 @@ class RedisLock:
 
 
 class Redis:
-    def __init__(self, host: str, port: int = 6379, password: str = None, db: int = 0, prefix: str = None, decode_responses: bool = True):
+    def __init__(self, host: str, port: int = 6379, password: str | None = None, db: int = 0, prefix: str | None = None, decode_responses: bool = True):
         self.redis_client = redis.StrictRedis(
             host=host,
             port=port,
@@ -54,3 +55,6 @@ class Redis:
 
     def incr(self, key: str, amount=1):
         return self.redis_client.incr(self.prefixed(key), amount)
+
+    def ttl(self, key: str):
+        return self.redis_client.ttl(self.prefixed(key))
