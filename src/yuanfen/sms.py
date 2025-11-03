@@ -12,6 +12,7 @@ from yuanfen import Config, Logger, Redis
 class SmsSendCodeRequest(BaseModel):
     """发送短信验证码请求"""
 
+    system: str = Field(..., description="系统标识")
     phone: str = Field(..., description="手机号", pattern=r"^1[3-9]\d{9}$")
     length: int = Field(6, description="验证码长度", ge=4, le=6)
 
@@ -19,6 +20,7 @@ class SmsSendCodeRequest(BaseModel):
 class SmsVerifyCodeRequest(BaseModel):
     """验证短信验证码请求"""
 
+    system: str = Field(..., description="系统标识")
     phone: str = Field(..., description="手机号", pattern=r"^1[3-9]\d{9}$")
     code: str = Field(..., description="验证码", min_length=4, max_length=6)
 
@@ -68,10 +70,10 @@ class SmsService:
         self.resend_interval = 60  # 发送间隔限制，单位：秒
 
     async def send_code(self, request: SmsSendCodeRequest):
-        code_key = f"sms:code:{request.phone}"
-        existing_code = self.redis.get(code_key)
+        redis_code_key = f"sms:{request.system}:code:{request.phone}"
+        existing_code = self.redis.get(redis_code_key)
         if existing_code:
-            ttl = self.redis.ttl(code_key)
+            ttl = self.redis.ttl(redis_code_key)
             self.logger.info(f"ttl: {ttl}")
             if ttl > self.expiry_time - self.resend_interval:
                 raise Exception("发送过于频繁，请稍后再试")
@@ -97,11 +99,11 @@ class SmsService:
 
         # 存储验证码到 Redis（5分钟有效期）
         code_data = json.dumps({"code": code, "attempts": 0})
-        self.redis.set(code_key, code_data, self.expiry_time)
+        self.redis.set(redis_code_key, code_data, self.expiry_time)
         self.logger.info(f"验证码已发送到 {request.phone}")
 
     async def verify_code(self, request: SmsVerifyCodeRequest):
-        redis_code_key = f"sms:code:{request.phone}"
+        redis_code_key = f"sms:{request.system}:code:{request.phone}"
         code_data_json = self.redis.get(redis_code_key)
         if not code_data_json:
             raise Exception("验证码已过期或不存在")
