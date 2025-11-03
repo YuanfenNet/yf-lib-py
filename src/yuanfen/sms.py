@@ -20,7 +20,7 @@ class SmsVerifyCodeRequest(BaseModel):
     """验证短信验证码请求"""
 
     phone: str = Field(..., description="手机号", pattern=r"^1[3-9]\d{9}$")
-    code: str = Field(..., description="验证码", min_length=6, max_length=6)
+    code: str = Field(..., description="验证码", min_length=4, max_length=6)
 
 
 class SmsService:
