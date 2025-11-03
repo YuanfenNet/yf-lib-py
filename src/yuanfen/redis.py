@@ -32,7 +32,7 @@ class RedisLock:
 
 class Redis:
     def __init__(self, host: str, port: int = 6379, password: str | None = None, db: int = 0, prefix: str | None = None, decode_responses: bool = True):
-        self.redis_client = redis.StrictRedis(
+        self.redis_client = redis.Redis(
             host=host,
             port=port,
             password=password,
@@ -44,17 +44,17 @@ class Redis:
     def prefixed(self, key: str):
         return f"{self.prefix}:{key}" if self.prefix else key
 
-    def get(self, key: str):
-        return self.redis_client.get(self.prefixed(key))
+    def get(self, key: str) -> str | None:
+        return self.redis_client.get(self.prefixed(key))  # type: ignore
 
-    def set(self, key: str, value: str, ex=None, px=None, nx=False):
-        return self.redis_client.set(self.prefixed(key), value, ex=ex, px=px, nx=nx)
+    def set(self, key: str, value: str, ex=None, px=None, nx=False) -> bool:
+        return self.redis_client.set(self.prefixed(key), value, ex=ex, px=px, nx=nx)  # type: ignore
 
-    def delete(self, key: str):
-        return self.redis_client.delete(self.prefixed(key))
+    def delete(self, key: str) -> int:
+        return self.redis_client.delete(self.prefixed(key))  # type: ignore
 
-    def incr(self, key: str, amount=1):
-        return self.redis_client.incr(self.prefixed(key), amount)
+    def incr(self, key: str, amount=1) -> int:
+        return self.redis_client.incr(self.prefixed(key), amount)  # type: ignore
 
-    def ttl(self, key: str):
-        return self.redis_client.ttl(self.prefixed(key))
+    def ttl(self, key: str) -> int:
+        return self.redis_client.ttl(self.prefixed(key))  # type: ignore
