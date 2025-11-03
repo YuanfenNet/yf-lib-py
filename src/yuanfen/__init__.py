@@ -6,6 +6,7 @@ from .group_robot import GroupRobot
 from .logger import Logger
 from .redis import Redis, RedisLock
 from .response import BaseResponse, ErrorResponse, SuccessResponse
+from .sms import SmsSendCodeRequest, SmsService, SmsVerifyCodeRequest
 from .version import Version
 
 __all__ = [
@@ -18,6 +19,9 @@ __all__ = [
     "Logger",
     "Redis",
     "RedisLock",
+    "SmsSendCodeRequest",
+    "SmsService",
+    "SmsVerifyCodeRequest",
     "SuccessResponse",
     "Version",
     "hash",
