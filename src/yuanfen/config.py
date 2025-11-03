@@ -1,6 +1,7 @@
 import configparser
 import json
 import os
+from typing import Any
 
 import yaml
 from watchdog.events import FileSystemEventHandler
@@ -33,8 +34,11 @@ class Config:
         else:
             return cls.instances[path]
 
-    def __getitem__(self, key):
-        return self.data.get(key, None)
+    def __getitem__(self, key: str) -> Any:
+        """获取配置项,如果键不存在则抛出 KeyError"""
+        if key not in self.data:
+            raise KeyError(f"Configuration key '{key}' not found")
+        return self.data[key]
 
     def get(self, key, default=None):
         return self.data.get(key, default)
