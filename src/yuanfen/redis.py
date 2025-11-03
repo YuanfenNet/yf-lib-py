@@ -31,15 +31,15 @@ class RedisLock:
 
 
 class Redis:
-    def __init__(self, host: str, port: int = 6379, password: str | None = None, db: int = 0, prefix: str | None = None, decode_responses: bool = True):
+    def __init__(self, config: dict):
         self.redis_client = redis.Redis(
-            host=host,
-            port=port,
-            password=password,
-            db=db,
-            decode_responses=decode_responses,
+            host=config.get("host", "localhost"),
+            port=config.get("port", 6379),
+            password=config.get("password", None),
+            db=config.get("db", 0),
+            decode_responses=config.get("decode_responses", True),
         )
-        self.prefix = prefix
+        self.prefix = config.get("prefix", "")
 
     def prefixed(self, key: str):
         return f"{self.prefix}:{key}" if self.prefix else key

@@ -52,13 +52,7 @@ class SmsService:
     def __init__(self, config: Config, logger: Logger):
         self.config = config
         self.logger = logger
-        self.redis = Redis(
-            config["redis"]["host"],
-            config["redis"]["port"],
-            config["redis"]["password"],
-            config["redis"]["db"],
-            config["redis"]["prefix"],
-        )
+        self.redis = Redis(config["redis"])
         self.client = DysmsapiClient(
             open_api_models.Config(
                 access_key_id=config["aliyun"]["access_key_id"],
