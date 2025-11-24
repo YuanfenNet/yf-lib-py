@@ -6,7 +6,7 @@ import redis
 class RedisLock:
     def __init__(self, redis_client, lock_key, timeout=10, retry_interval=None):
         self.redis_client = redis_client
-        self.lock_key = lock_key
+        self.lock_key = f"lock:{lock_key}"
         self.timeout = timeout
         self.retry_interval = retry_interval
         self.locked = False
