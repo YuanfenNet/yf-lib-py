@@ -7,27 +7,27 @@
         'Programming Language :: Python',
     ]
     dependencies = [
-        "alibabacloud-dysmsapi20170525~=4.2.0",
+        "alibabacloud-dysmsapi20170525~=4.5.0",
         "chardet~=5.2",
-        "pydantic~=2.10",
-        "pytz~=2025.1",
+        "pydantic~=2.12",
+        "pytz~=2025.2",
         "pyyaml~=6.0",
-        "redis~=7.0",
-        "requests~=2.0",
+        "redis~=7.3",
+        "requests~=2.32",
         "watchdog~=6.0",
     ]
     description = "Yuanfen Python Library"
     license = { text = "MIT" }
     name = "yuanfen"
     readme = "README.md"
-    requires-python = ">=3.9"
+    requires-python = ">=3.14.3"
     version = "0.0.0"
 
 [project.urls]
     repository = "https://github.com/YuanfenNet/yf-lib-py"
 
 [dependency-groups]
-    dev = ["ruff>=0.14.1"]
+    dev = ["ruff>=0.15.5"]
 
 [tool.ruff]
     line-length = 180
