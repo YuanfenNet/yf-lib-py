@@ -8,7 +8,7 @@
     ]
     dependencies = [
         "alibabacloud-dysmsapi20170525~=4.5.0",
-        "chardet~=5.2",
+        "chardet~=7.1",
         "pydantic~=2.12",
         "pytz~=2025.2",
         "pyyaml~=6.0",
