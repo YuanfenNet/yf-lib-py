@@ -189,5 +189,4 @@ cython_debug/
 
 .ruff_cache/
 logs/
-tests/
 test.py
