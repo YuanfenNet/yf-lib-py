@@ -2,13 +2,15 @@
 
 ## Installation
 
+Requires Python 3.15.2 or newer.
+
 ```bash
 pip install yuanfen
 ```
 
 ## Config
 
-Supports `.json`, `.yaml` / `.yml`, and `.ini` files. Instances are singletons per file path. Auto-reloads when the config file changes (uses polling by default).
+Supports `.json`, `.yaml` / `.yml`, and `.ini` files. Instances are cached by the path argument; different spellings of the same path create separate instances. File changes trigger a reload (uses polling by default).
 
 ```python
 from yuanfen import Config
@@ -30,7 +32,7 @@ print(config.get("debug", False))
 
 ## Logger
 
-Writes to both stdout and a daily-rotated file at `logs/log` (kept for 365 days).
+When the underlying logger has no handlers, adds a stream handler (stderr by default) and a daily-rotated file handler at `logs/log` (up to 365 backups). Existing handlers and log levels are left unchanged.
 
 ```python
 import logging
@@ -53,6 +55,8 @@ logger.error("error log")
 ## Response
 
 Pydantic response models for FastAPI.
+
+The FastAPI example requires installing `fastapi` and `uvicorn` separately.
 
 ```python
 from yuanfen import BaseResponse, SuccessResponse, ErrorResponse
@@ -156,14 +160,14 @@ mail = Email(
 mail.send_text(to="recipient@example.com", subject="Hello", text="World")
 
 # Search latest N email UIDs matching IMAP criteria
-ids = mail.search_ids(count=5, "UNSEEN")
+ids = mail.search_ids(5, "UNSEEN")
 
 # Fetch a single email by UID
 msg = mail.fetch(message_id="123", content_type="text/plain")
 # msg keys: subject, from, to, date, charset, content
 
 # Search + fetch in one call
-messages = mail.search(count=5, content_type="text/plain", "UNSEEN")
+messages = mail.search(5, "text/plain", "UNSEEN")
 ```
 
 ## Redis
@@ -196,6 +200,8 @@ redis.getset("foo", "new")
 
 ### RedisLock
 
+The lock key is stored as `lock:<lock_key>` and does not use the Redis wrapper's prefix. Release deletes the key without checking ownership, so this helper is unsuitable when an expired lock might be acquired by another process before release.
+
 ```python
 lock = RedisLock(
     redis_client=redis.redis_client,
@@ -211,33 +217,6 @@ if lock.acquire():
     finally:
         lock.release()
 ```
-
-## SMS
-
-SMS verification code service built on Alibaba Cloud SMS (async).
-
-```python
-from yuanfen import Config, Logger, SmsService, SmsSendCodeRequest, SmsVerifyCodeRequest
-
-config = Config("config.yaml")
-logger = Logger()
-sms = SmsService(config=config, logger=logger)
-
-# config.yaml must contain:
-# redis: { host, port, password, db, prefix }
-# aliyun: { access_key_id, access_key_secret, sms_sign_name, sms_template_code }
-
-# Send a 6-digit code (raises on cooldown or send failure)
-await sms.send_code(SmsSendCodeRequest(system="myapp", phone="13800138000", length=6))
-
-# Verify the code (raises on wrong code / expiry / too many attempts)
-await sms.verify_code(SmsVerifyCodeRequest(system="myapp", phone="13800138000", code="123456"))
-```
-
-Behavior:
-- Code TTL: **300 seconds** (5 minutes)
-- Resend cooldown: **60 seconds**
-- Max verify attempts: **5** (code is deleted on exceeded)
 
 ## hash
 
@@ -264,9 +243,11 @@ location = ip.get_ip_location("8.8.8.8", source="baidu")
 location = ip.get_ip_location("8.8.8.8", source="ip-api")
 ```
 
+Public IP lookup returns `None` if both requests fail. Location lookup returns `None` for request failures, invalid responses, or an unsupported source. Unexpected exceptions can propagate.
+
 ## Version
 
-Semantic version parsing and comparison.
+Numeric major, minor, and patch version parsing and comparison. Prerelease and build metadata are not supported.
 
 ```python
 from yuanfen import Version

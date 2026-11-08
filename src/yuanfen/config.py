@@ -1,7 +1,7 @@
 import configparser
 import json
 import os
-from typing import Any
+from typing import Any, ClassVar
 
 import yaml
 from watchdog.events import FileSystemEventHandler
@@ -12,7 +12,7 @@ from .logger import Logger
 
 
 class Config:
-    instances = {}
+    instances: ClassVar[dict] = {}
 
     def __init__(self, path, poll=True, logger=None):
         # 只在新实例创建时初始化

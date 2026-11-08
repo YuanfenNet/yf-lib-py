@@ -15,12 +15,12 @@ def current_timestamp(length: int = 16) -> int:
 
 
 # get timestamp from datetime
-def get_timestamp(dt: datetime = None, length: int = 16) -> int:
+def get_timestamp(dt: datetime | None = None, length: int = 16) -> int:
     _timestamp = dt.timestamp() if dt else py_time.time()
     return int(_timestamp * 10 ** (length - 10))
 
 
-def format(dt: datetime = None, format: str = "%Y-%m-%dT%H:%M:%S.%f") -> str:
+def format(dt: datetime | None = None, format: str = "%Y-%m-%dT%H:%M:%S.%f") -> str:
     if dt is None:
         dt = now()
     return dt.strftime(format)

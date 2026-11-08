@@ -1,6 +1,6 @@
-from typing import Dict, SupportsInt, Tuple, Union
+from typing import SupportsInt, Union
 
-Comparable = Union["Version", Dict[str, int], Union[int], str]
+Comparable = Union["Version", dict[str, int], int, str]
 
 
 class Version:
@@ -37,21 +37,21 @@ class Version:
     def patch(self, value):
         raise AttributeError("attribute 'patch' is readonly")
 
-    def to_tuple(self) -> Tuple[int, int, int]:
+    def to_tuple(self) -> tuple[int, int, int]:
         return (self.major, self.minor, self.patch)
 
-    def to_dict(self) -> Dict[str, int]:
+    def to_dict(self) -> dict[str, int]:
         return {"major": self.major, "minor": self.minor, "patch": self.patch}
 
     def __str__(self) -> str:
         return f"{self._major}.{self._minor}.{self._patch}"
 
     def __repr__(self) -> str:
-        s = ", ".join("%s=%r" % (key, val) for key, val in self.to_dict().items())
-        return "%s(%s)" % (type(self).__name__, s)
+        s = ", ".join(f"{key}={val!r}" for key, val in self.to_dict().items())
+        return f"{type(self).__name__}({s})"
 
     @classmethod
-    def parse(cls, version: str) -> "Version":
+    def parse(cls, version: str) -> Version:
         version_parts = version.split(".")
         if len(version_parts) < 1:
             raise ValueError("Invalid version format")
@@ -77,7 +77,7 @@ class Version:
         elif isinstance(other, str):
             other = Version.parse(other)
         elif not isinstance(other, cls):
-            raise ValueError(f"Unsupported type: {type(other)}")
+            raise ValueError(f"Unsupported type: {type(other)}")  # noqa: TRY004 - 保持公开接口的异常类型
 
         v1 = self.to_tuple()
         v2 = other.to_tuple()
